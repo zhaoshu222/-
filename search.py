@@ -122,10 +122,6 @@ def get_path_DFS_ALL(lines_info, neighbor_info, from_station, to_station):
 
 demo = get_path_DFS_ALL(lines_info, neighbor_info, from_station='石厂', to_station='苹果园')
 print(demo)
-
-
-#  你也可以使用第二种算法：没有启发函数的简单宽度优先
-
 def get_path_BFS(lines_info, neighbor_info, from_station, to_station):
     # 搜索策略：以站点数量为cost（因为车票价格是按站算的）
     # 这种情况下，站点间的坐标距离难以转化为可靠的启发函数，所以只用简单的BFS算法
