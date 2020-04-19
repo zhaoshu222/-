@@ -46,8 +46,6 @@ def get_lines_stations_info(text):
     return lines_info,station_info
 lines_info, stations_info = get_lines_stations_info(cities_list)
 #print(stations_info)
-
-
 # 根据线路信息，建立站点邻接表dict
 def get_neighbor_info(lines_info):
     neighbor_info = {}
@@ -80,13 +78,6 @@ def get_neighbor_info(lines_info):
                     tmp_list.append(sta[k + 1])
                     tmp_list.append(sta[k - 1])
                 neighbor_info[v] = tmp_list
-    # print(neighbor_info)
-
-    # 把str2加入str1站点的邻接表中
-    # def add_neighbor_dict(info, str1, str2):
-    # 请在这里写代码
-
-    # pass
 
     return neighbor_info
 
