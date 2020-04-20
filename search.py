@@ -148,3 +148,50 @@ def get_path_BFS(lines_info, neighbor_info, from_station, to_station):
 
 demo_1 = get_path_BFS(lines_info, neighbor_info, from_station='石厂', to_station='苹果园')
 print(demo_1)
+import pandas as pd
+import time
+
+#计算经纬度距离
+def distance(stations_info,from_station,to_station):
+    x=stations_info[from_station][0]-stations_info[to_station][0]
+    y=stations_info[from_station][1]-stations_info[to_station][1]
+    return (x**2+y**2)**0.5
+    
+def get_path_Astar(lines_info, neighbor_info, stations_info, from_station, to_station):
+    # 搜索策略：以路径的站点间直线距离累加为cost，以当前站点到目标的直线距离为启发函数
+    # 检查输入站点名称
+    
+    #预估每个点到终点的距离，放在字典中不用反复计算
+    guessDic={}
+    for station in neighbor_info.keys():
+        guessDic[station]=distance(stations_info,station,to_station)
+    #已确定的点
+    reached={from_station:[0,0]}
+    #备选的点、距离、上一个点
+    neighbor={station:[distance(stations_info, from_station, station),from_station] for station in neighbor_info[from_station]}
+    while to_station not in reached.keys():
+        #找到去该点距离+预估距离最短的点
+        bestItem=None
+        bestDistance=10000
+        for item in neighbor.items():
+            if item[1][0]+guessDic[item[0]]<bestDistance:
+                bestDistance=item[1][0]+guessDic[item[0]]
+                bestItem=item
+        reached[bestItem[0]]=bestItem[1]
+        neighbor.pop(bestItem[0])
+        for station in neighbor_info[bestItem[0]]:
+            if station not in reached.keys():
+                if station not in neighbor:
+                    neighbor[station]=[bestItem[1][0]+distance(stations_info,bestItem[0],station),bestItem[0]]
+                else:
+                    curDistance=bestItem[1][0]+distance(stations_info,bestItem[0],station)
+                    if curDistance<neighbor[station][0]:
+                        neighbor[station]=[curDistance,bestItem[0]]
+    #反向找路径
+    path=[to_station]
+    while path[-1]!=from_station:
+        path.append(reached[path[-1]][-1])
+    path.reverse()
+    return path 
+res=get_path_Astar(lines_info, neighbor_info, stations_info, '奥体中心', '天安门东')
+print('Astar:',res)
